@@ -40,9 +40,7 @@
                 <el-form-item label="评论时间">
                     <el-input v-model="form.commentTime"/>
                 </el-form-item>
-                <el-form-item label="序号">
-                     <el-input v-model="form.orderId"/>
-                </el-form-item>
+                
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="closeModalHandler" size="small">取 消</el-button>
