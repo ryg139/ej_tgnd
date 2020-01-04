@@ -53,7 +53,9 @@
             <el-form-item label="手机号">
               <el-input v-model="form.telephone"/>
             </el-form-item>
-
+            <el-form-item label="身份证号">
+              <el-input v-model="form.idCard"/>
+            </el-form-item>
             <el-form-item label="银行卡号">
               <el-input v-model="form.bankCard"/>
             </el-form-item>
