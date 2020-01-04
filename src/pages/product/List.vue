@@ -75,12 +75,13 @@ export default {
     
     loadCategory(){
       let url = "http://localhost:6677/category/findAll"
-    request.get(url).then((response)=>{
+      request.get(url).then((response)=>{
       this.options = response.data;
     })
-    },loadData(){
+    },
+    loadData(){
       let url = "http://localhost:6677/product/findAll"
-    request.get(url).then((response)=>{
+      request.get(url).then((response)=>{
       //将查询结果设置到product中
       this.products = response.data;
     })

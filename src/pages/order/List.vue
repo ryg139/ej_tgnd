@@ -5,14 +5,15 @@
        <el-button type="danger" size="small" >批量删除</el-button>
         <!--/按钮结束-->
         <!--表格-->
-       <el-table :data="orders">
+       <el-table :data="orders.list">
            <el-table-column prop="id" label="编号" ></el-table-column>
-           <el-table-column prop="orderTime" label="订单编号" ></el-table-column>
+           <el-table-column prop="orderTime" width="200" label="下单时间" ></el-table-column>
+           <el-table-column prop="total" label="总价" ></el-table-column>
            <el-table-column prop="status" label="订单状态" ></el-table-column>
-           <el-table-column prop="customerId" label="顾客编号" ></el-table-column>
-           <el-table-column prop="waiterId" label="员工编号" ></el-table-column>
-           <el-table-column prop="addressId" label="地址编号" ></el-table-column>
-           <el-table-column label="操作" >
+           <el-table-column prop="customerId" label="顾客ID" ></el-table-column>
+           <el-table-column prop="waiterId" label="员工ID" ></el-table-column>
+           <el-table-column prop="addressId" label="地址ID" ></el-table-column>
+           <el-table-column fixed="right" label="操作" >
                <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">
                         <i class="el-icon-delete"/>
@@ -25,8 +26,11 @@
        </el-table>
         <!--/表格结束-->
         <!--分页开始-->
-        <!-- <el-pagination layout="prev, pager, next" :total="50">
-        </el-pagination> -->
+        <el-pagination 
+            layout="prev, pager, next" 
+            :total="orders.total" 
+            @current-change="pageChangeHandler">
+        </el-pagination>
         <!--/分页结束-->
          <!--模态框-->
         <el-dialog :title="title"  :visible.sync="visible"  width="60%">
@@ -61,10 +65,25 @@ import request from '@/utils/request'
 import querystring from 'querystring'
 export default {
     methods:{
+        //当分页中当前页改变的时候执行
+        pageChangeHandler(page){
+            //将params中当前页改为插件中的当前页
+            this.params.page = page-1;
+            //刷新页面
+            this.loadData();
+        },
         loadData(){
-            let url = "http://localhost:6677/order/findAll"
-            request.get(url).then((response)=>{
-            this.orders = response.data;
+            let url = "http://localhost:6677/order/queryPage"
+            request({
+                url,
+                method:"post",
+                headers:{
+                    "Content-Type":"application/x-www-form-urlencoded"
+                },
+                data:querystring.stringify(this.params)
+            }).then((response)=>{
+                //orders为一个对象
+                this.orders = response.data;
             })
         },
         submitHandler(){
@@ -127,9 +146,13 @@ export default {
         return{
             title:"录入订单信息",
             visible:false,
-            orders:[],
+            orders:{},
             form:{
                 type:"order"
+            },
+            params:{
+                page:0,
+                pageSize:10
             }
         }
     },
