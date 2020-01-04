@@ -34,7 +34,8 @@
         :visible.sync="visible"
         width="60%">
         <el-form :model="form" label-width="80px">
-            
+
+            --{{form}}
             <el-form-item label="产品名称">
                 <el-input v-model="form.name"/>
             </el-form-item>
@@ -42,14 +43,14 @@
                 <el-input v-model="form.price"/>
             </el-form-item>
             <el-form-item label="所属产品">
-              <el-input v-model="form.categoryId"/>
+              <el-select v-model="form.categoryId">
+                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="描述">
               <el-input  type="textarea" v-model="form.description"/>
             </el-form-item>
-
-            
-
         </el-form>
       
       <span slot="footer" class="dialog-footer">
@@ -68,10 +69,16 @@ export default {
   created(){
           //vue实例创建完毕
           this.loadData();
+          this.loadCategory();
         },
   methods:{
     
-    loadData(){
+    loadCategory(){
+      let url = "http://localhost:6677/category/findAll"
+    request.get(url).then((response)=>{
+      this.options = response.data;
+    })
+    },loadData(){
       let url = "http://localhost:6677/product/findAll"
     request.get(url).then((response)=>{
       //将查询结果设置到product中
@@ -133,7 +140,6 @@ export default {
       toAddHandler(){
         this.visible = true;
         this.form={
-          type:"product"
         }
       }
     },
@@ -142,8 +148,8 @@ export default {
         return {
           visible:false,
           products:[],
+          options:[],
           form:{
-            type:"product"
           }
         }
       },
