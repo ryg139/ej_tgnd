@@ -1,7 +1,7 @@
-//我是组长的爸爸
+//我是组员kk
 import Vue from 'vue'
 import Router from 'vue-router'
-
+//我是组长
 Vue.use(Router)
 
 /* Layout */
