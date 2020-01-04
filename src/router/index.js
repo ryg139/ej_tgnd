@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+//我是组长
 Vue.use(Router)
 
 /* Layout */
