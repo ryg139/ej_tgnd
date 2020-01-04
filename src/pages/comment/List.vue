@@ -35,7 +35,7 @@
             <el-form :model="form" label-width="80px">
 
                 <el-form-item label="内容">
-                    <el-input type="content" v-model="form.content"/>
+                    <el-input  v-model="form.content"/>
                 </el-form-item>
                 <el-form-item label="评论时间">
                     <el-input v-model="form.commentTime"/>
@@ -122,19 +122,24 @@ export default {//暴露接口
       this.visible = false;
     },
     toAddHandler(){
-      this.visible = true;
-    }
-  },
+       this.visible=true;
+       this.form={
+                type:"comment"
+            }
+        }
+    },
+  
   // 用于存放要向网页中显示的数据
   data(){
     return {
-      visible:false,
-      comment:[],
-      form:{
-        type:"comment"
-      }
-    }
-  },
+     title:"录入评论信息",
+            visible:false,
+            comment:[],
+            form:{
+                type:"comment"
+            }
+        }
+    },
   created(){
     // this为当前vue实例对象
     // vue实例创建完毕 

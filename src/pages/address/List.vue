@@ -133,19 +133,25 @@ export default {//暴露接口
       this.visible = false;
     },
     toAddHandler(){
-      this.visible = true;
-    }
-  },
+     this.form={
+                type:"address"
+            }
+            this.title="录入地址信息";
+            this.visible=true;
+        }
+    },
+  
   // 用于存放要向网页中显示的数据
   data(){
     return {
-      visible:false,
-      address:[],
-      form:{
-        type:"address"
-      }
-    }
-  },
+     title:"录入地址信息",
+            visible:false,
+            address:[],
+            form:{
+                type:"address"
+            }
+        }
+    },
   created(){
     // this为当前vue实例对象
     // vue实例创建完毕 
