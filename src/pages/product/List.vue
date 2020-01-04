@@ -41,13 +41,14 @@
             <el-form-item label="价格">
                 <el-input v-model="form.price"/>
             </el-form-item>
-            <el-form-item label="描述">
-              <el-input v-model="form.description"/>
-            </el-form-item>
-
             <el-form-item label="所属产品">
               <el-input v-model="form.categoryId"/>
             </el-form-item>
+            <el-form-item label="描述">
+              <el-input  type="textarea" v-model="form.description"/>
+            </el-form-item>
+
+            
 
         </el-form>
       
