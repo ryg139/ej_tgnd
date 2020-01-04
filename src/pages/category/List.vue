@@ -5,12 +5,12 @@
         <el-table :data="categorys">
             <el-table-column label="编号" prop="id"></el-table-column>
             <el-table-column label="栏目名称" prop="name"></el-table-column>
-            <el-table-column label="序号" prop="number"></el-table-column>
+            <el-table-column label="序号" prop="num"></el-table-column>
             <el-table-column label="父栏目" prop="parentId"></el-table-column>
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
-                    <a href="" @click.prevent="toUpdateHandler">修改</a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
                 </template>
             </el-table-column>
         </el-table>
@@ -26,7 +26,7 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="序号">
-          <el-input v-model="form.number"></el-input>
+          <el-input v-model="form.num"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -85,15 +85,25 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
+        //调用后台接口完成删除操作request
+        let url="http://localhost:6677/category/deleteById?id="+id;
+        request.get(url).then((response)=>{
+          //刷新数据
+          this.loadData();
+          //提示结果
+          this.$message({
           type: 'success',
-          message: '删除成功!'
+          message:response.message
         });
+        })
       })
       
     },
-    toUpdateHandler(){
-      this.visible = true;
+    toUpdateHandler(row){
+      //显示模态框当前信息
+      this.title="修改顾客信息";
+      this.form=row;
+      this.visible = true;//打开模态框
     },
     closeModalHandler(){
       this.visible = false;
