@@ -26,6 +26,7 @@
         <!--/分页结束-->
          <!--模态框-->
         <el-dialog :title="title"  :visible.sync="visible"  width="60%">
+            {{form}}
             <el-form :model="form" lable-width="80px">
                 <el-form-item label="订单编号">
                     <el-input v-model="form.orderTime"></el-input>
