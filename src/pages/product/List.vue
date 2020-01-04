@@ -16,17 +16,17 @@
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
-                    <a href="" @click.prevent="toUpdateHandler">修改</a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
                 </template></el-table-column>
             
         </el-table>
         <!-- /表格 -->
         <!-- 分页 -->
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <!-- <el-pagination layout="prev, pager, next" :total="50"></el-pagination> -->
         <!-- /分页 -->
         <!-- 模态框 -->
         <el-dialog
-        title="修改产品信息"
+        title="添加产品信息"
         :visible.sync="visible"
         width="60%">
         <el-form :model="form" label-width="80px">
@@ -60,33 +60,27 @@
 <script>
 import request from'@/utils/request'
 import querystring from 'querystring'
-export default {//暴露接口
-    data(){
-        return{
-            
-            title:"录入产品信息",
-            visible:false,
-            products:[],
-            form:{
-                type:"product"
-            }
-        }
+export default {
+  // 用于存放网页中需要调用的方法
+  methods:{
+    
+    loadData(){
+      let url = "http://localhost:6677/product/findAll"
+    request.get(url).then((response)=>{
+      //将查询结果设置到product中
+      this.products = response.data;
+    })
     },
-    created(){
-        //在页面加载出来时加载数据
-        this.loadData();
-    },
-    methods:{
-        submitHandler(){
-        let url = "http://localhost:6677/product/saveOrUpdate"
-        request({
-        url,
-        method:"post",
-        headers:{
-            "Content-Type":"application/x-www-form-urlencoded"
-            },
-            data:querystring.stringify(this.form)
-        }).then((response)=>{
+    submitHandler(){
+           let url = "http://localhost:6677/product/saveOrUpdate";
+           request({
+             url,
+             method:"post",
+             headers:{
+               "Content-Type":"application/x-www-form-urlencoded"
+             },
+              data:querystring.stringify(this.form)
+      }).then((response)=>{
                 //模态框关闭
                 this.closeModalHandler();
                 //刷新
@@ -98,31 +92,59 @@ export default {//暴露接口
                 })
             })
         },
-        loadData(){
-            //this ->vue实例，通过vue实例访问该实例中数据
-            //this.title/this.toAddhandler
-            let url = "http://localhost:6677/product/findAll"
-            request.get(url).then((response)=>{
-                this.products = response.data; 
-            }) 
-        },
+
+      toDeleteHandler(id){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          //调用后台接口
+          let url = "http://localhost:6677/product/deleteById?id="+id;
+          request.get(url).then((response)=>{
+            //刷新数据  提示结果
+            this.loadData();
+              this.$message({
+              type: 'success',
+              message:response.message
+            });
+
+          })
+          
+        })
         
-        toAddHandler(){
-            this.visible=true
-            this.title="添加产品信息"
-        },
-        closeModalHandler(){
-            this.visible=false
-        },
-        toDeleteHandler(){
-            this,visible=true
-            this.title="删除产品信息"
-        },
-        toUpdateHandler(){
-            this.visible=true
+      },
+      toUpdateHandler(row){
+        //模态框表单中显示出当前行信息
+        this.form = row ;
+        //打开模态框
+        this.visible = true;
+      },
+      closeModalHandler(){
+        this.visible = false;
+      },
+      toAddHandler(){
+        this.visible = true;
+        this.form = {
+          type:"product"
+        }
+      }
+    },
+  // 用于存放要向网页中显示的数据
+      data(){
+        return {
+          visible:false,
+          products:[],
+          form:{
+            type:"product"
+          }
+        }
+      },
+        created(){
+          //vue实例创建完毕
+          this.loadData();
         }
     }
-}
 </script>
 <style scoped>
 

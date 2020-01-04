@@ -16,12 +16,12 @@
             <el-table-column fixed="right" label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
-                    <a href="" @click.prevent="toUpdateHandler">修改</a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
                 </template></el-table-column>
         </el-table>
         <!-- /表格 -->
         <!-- 分页 -->
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <!-- <el-pagination layout="prev, pager, next" :total="50"></el-pagination> -->
         <!-- /分页 -->
         <!-- 模态框 -->
         <el-dialog
@@ -113,21 +113,44 @@ export default {//暴露接口
                 this.employees = response.data; 
             }) 
         },
+        toUpdateHandler(row){
+        //模态框表单中显示出当前行信息
+        this.form = row ;
+        //打开模态框
+        this.visible = true;
+      },
         
         toAddHandler(){
-            this.visible=true
-            this.title="录入员工信息"
-        },
+        this.visible = true;
+        this.form = {
+          type:"customer"
+        }
+      },
         closeModalHandler(){
             this.visible=false
         },
-        toDeleteHandler(){
-            this,visible=true
-            this.title="删除员工信息"
-        },
-        toUpdateHandler(){
-            this.visible=true
-        }
+        toDeleteHandler(id){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          //调用后台接口
+          let url = "http://localhost:6677/waiter/deleteById?id="+id;
+          request.get(url).then((response)=>{
+            //刷新数据  提示结果
+            this.loadData();
+              this.$message({
+              type: 'success',
+              message:response.message
+            });
+
+          })
+          
+        })
+        
+      },
+        
     }
 }
 </script>
