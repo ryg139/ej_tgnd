@@ -26,7 +26,7 @@
         <!-- /分页 -->
         <!-- 模态框 -->
         <el-dialog
-        title="添加产品信息"
+        title="录入产品信息"
         :visible.sync="visible"
         width="60%">
         <el-form :model="form" label-width="80px">
@@ -116,7 +116,7 @@ export default {
       },
       toUpdateHandler(row){
         //模态框表单中显示出当前行信息
-        this.form = row ;
+        this.form = row;
         //打开模态框
         this.visible = true;
       },

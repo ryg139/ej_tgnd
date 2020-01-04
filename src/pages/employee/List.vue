@@ -25,7 +25,7 @@
         <!-- /分页 -->
         <!-- 模态框 -->
         <el-dialog
-        title="录入顾客信息"
+        title="录入员工信息"
         :visible.sync="visible"
         width="60%">
         <el-form :model="form" label-width="80px">
