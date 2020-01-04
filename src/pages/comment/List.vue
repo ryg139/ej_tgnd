@@ -12,8 +12,12 @@
             <el-table-column width="200" prop="orderId" label="序号"></el-table-column>
             <el-table-column fixed="right" label="操作">
                 <template v-slot="slot">
-                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
-                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
+                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">
+                      <i class="el-icon-delete"/>
+                    </a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">
+                      <i class="el-icon-edit"/>
+                    </a>
                 </template>
             </el-table-column>
         </el-table>
