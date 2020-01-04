@@ -1,3 +1,4 @@
+//我是组长的爸爸
 import Vue from 'vue'
 import Router from 'vue-router'
 
