@@ -30,9 +30,7 @@
         :visible.sync="visible"
         width="60%">
         <el-form :model="form" label-width="80px">
-            <el-form-item label="编号">
-                <el-input v-model="form.id"/>
-            </el-form-item>
+            
             <el-form-item label="产品名称">
                 <el-input v-model="form.name"/>
             </el-form-item>
@@ -62,6 +60,10 @@ import request from'@/utils/request'
 import querystring from 'querystring'
 export default {
   // 用于存放网页中需要调用的方法
+  created(){
+          //vue实例创建完毕
+          this.loadData();
+        },
   methods:{
     
     loadData(){
@@ -106,7 +108,7 @@ export default {
             this.loadData();
               this.$message({
               type: 'success',
-              message:response.message
+              message:"删除成功"
             });
 
           })
@@ -125,7 +127,7 @@ export default {
       },
       toAddHandler(){
         this.visible = true;
-        this.form = {
+        this.form={
           type:"product"
         }
       }
@@ -140,10 +142,7 @@ export default {
           }
         }
       },
-        created(){
-          //vue实例创建完毕
-          this.loadData();
-        }
+        
     }
 </script>
 <style scoped>
