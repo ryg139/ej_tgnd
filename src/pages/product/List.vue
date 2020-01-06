@@ -11,8 +11,13 @@
             <el-table-column prop="id" label="编号"></el-table-column>
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price" label="价格"></el-table-column>
-            <el-table-column prop="description" label="描述"></el-table-column>
+            <el-table-column prop="description" width="200" label="描述"></el-table-column>
             <el-table-column prop="categoryId" label="所属产品"></el-table-column>
+            <el-table-column label="产品图片">
+              <template slot-scope="scope">
+                <img :src="scope.row.photo" width="20" height="20">
+              </template>
+            </el-table-column>
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">
@@ -51,6 +56,17 @@
             <el-form-item label="描述">
               <el-input  type="textarea" v-model="form.description"/>
             </el-form-item>
+            <el-form-item label="图片">
+              <el-upload
+                class="upload-demo"
+                action="http://134.175.154.93:6677/file/upload"
+                :on-success="uploadSuccessHandler"
+                :file-list="fileList"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              </el-upload>
+            </el-form-item>
         </el-form>
       
       <span slot="footer" class="dialog-footer">
@@ -72,7 +88,11 @@ export default {
           this.loadCategory();
         },
   methods:{
-    
+    uploadSuccessHandler(response){
+      let photo="http://134.175.154.93:8888/group1/"
+      +response.data.id
+      this.form.photo=photo;
+    },
     loadCategory(){
       let url = "http://localhost:6677/category/findAll"
       request.get(url).then((response)=>{
@@ -134,12 +154,14 @@ export default {
         this.form = row;
         //打开模态框
         this.visible = true;
+        this.fileList=[];
       },
       closeModalHandler(){
         this.visible = false;
       },
       toAddHandler(){
         this.visible = true;
+        this.fileList=[];
         this.form={
         }
       }
@@ -150,6 +172,7 @@ export default {
           visible:false,
           products:[],
           options:[],
+          fileList:[],
           form:{
           }
         }
