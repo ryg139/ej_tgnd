@@ -1,9 +1,16 @@
 <template>
     <div>
-    <!--按钮-->
-       <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
-       <el-button type="danger" size="small" >批量删除</el-button>
-        <!--/按钮结束-->
+        {{params}}
+        <!-- 选项卡 -->
+        <el-tabs v-model="params.status" @tab-click="loadData">
+            <el-tab-pane label="全部" name="全部"></el-tab-pane>
+            <el-tab-pane label="待派单" name="待派单"></el-tab-pane>
+            <el-tab-pane label="待接单" name="待接单"></el-tab-pane>
+            <el-tab-pane label="待服务" name="待服务"></el-tab-pane>
+            <el-tab-pane label="待确认" name="待确认"></el-tab-pane>
+            <el-tab-pane label="已完成" name="已完成"></el-tab-pane>
+        </el-tabs>
+        <!-- /选项卡结束 -->
         <!--表格-->
        <el-table :data="orders.list">
            <el-table-column prop="id" label="编号" ></el-table-column>
@@ -13,45 +20,41 @@
            <el-table-column prop="customerId" label="顾客ID" ></el-table-column>
            <el-table-column prop="waiterId" label="员工ID" ></el-table-column>
            <el-table-column prop="addressId" label="地址ID" ></el-table-column>
-           <el-table-column fixed="right" label="操作" >
-               <template v-slot="slot">
-                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">
-                        <i class="el-icon-delete"/>
-                    </a>
-                    <a href="" @click.prevent="toUpdateHandler(slot.row)">
-                        <i class="el-icon-edit" />
-                    </a>
-               </template>
-           </el-table-column>
+           <el-table-column fixed="right" label="操作">
+                <template v-slot="slot">
+                    <a href="javascript:void(0)" >详情</a>
+                    <a href="" v-if="slot.row.status === '待派单'" @click.prevent="toSendOrderHandler(slot.row)">派单</a>
+                </template>
+            </el-table-column>
        </el-table>
         <!--/表格结束-->
         <!--分页开始-->
         <el-pagination 
+            :hide-on-single-page="true"
             layout="prev, pager, next" 
             :total="orders.total" 
             @current-change="pageChangeHandler">
         </el-pagination>
         <!--/分页结束-->
          <!--模态框-->
-        <el-dialog :title="title"  :visible.sync="visible"  width="60%">
-            {{form}}
-            <el-form :model="form" lable-width="80px">
-                <el-form-item label="订单编号">
-                    <el-input v-model="form.orderTime"></el-input>
-                </el-form-item>
-                <el-form-item label="订单状态">
-                    <el-input v-model="form.status" ></el-input>
-                </el-form-item>
-                <el-form-item label="顾客编号">
-                    <el-input v-model="form.customerId" ></el-input>
-                </el-form-item>
-                <el-form-item label="员工编号">
-                    <el-input v-model="form.waiterId" ></el-input>
-                </el-form-item>
-                <el-form-item label="地址编号">
-                    <el-input v-model="form.addressId" ></el-input>
-                </el-form-item>
-            </el-form>
+        <el-dialog title="派单"  :visible.sync="visible"  width="60%">
+            
+            <div>
+                <p><strong>订单编号：</strong>{{form.id}}</p>
+                <p><strong>订单总价：</strong>{{form.total}}</p>
+                <p><strong>下单时间：</strong>{{form.orderTime}}</p>
+                <p>
+                    <strong>服务员工：</strong>
+                    <el-radio-group v-model="waiterId">
+                        <el-radio
+                            border
+                            v-for="e in employees"
+                            :key="e.id"
+                            :label="e.id"
+                        >{{e.realname}}</el-radio>
+                    </el-radio-group>
+                </p>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="closeModalHandler" size="small">取 消</el-button>
                 <el-button type="primary" @click="submitHandler" size="small">确 定</el-button>
@@ -69,11 +72,14 @@ export default {
         pageChangeHandler(page){
             //将params中当前页改为插件中的当前页
             this.params.page = page-1;
-            //刷新页面
+            //加载
             this.loadData();
         },
         loadData(){
             let url = "http://localhost:6677/order/queryPage"
+            if(this.params.status === "全部"){
+                delete this.params.status;
+            }
             request({
                 url,
                 method:"post",
@@ -87,14 +93,14 @@ export default {
             })
         },
         submitHandler(){
-            let url = "http://localhost:6677/order/save"
+            let url = "http://localhost:6677/order/sendOrder"
             request({
                 url,
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/x-www-form-urlencoded"
-                },
-                data:querystring.stringify(this.form)
+                method:"GET",
+                params:{
+                    orderId:this.form.id,
+                    waiterId:this.waiterId
+                }
             }).then((response)=>{
                 //请求结束，关闭模态框
                 this.closeModalHandler();
@@ -107,39 +113,21 @@ export default {
                 })
             })
         },
-        toDeleteHandler(id){
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let url="http://localhost:6677/order/deleteById?id="+id;
-                request.get(url).then((response)=>{
-                    //刷新
-                    this.loadData();
-                    //提示
-                    this.$message({
-                        type: 'success',
-                        message: response.message
-                    });
-                })
-                
-            })
-        },
-        toUpdateHandler(row){
-            this.form=row;
-            this.title="修改订单信息";
-            this.visible=true;
-        },
         closeModalHandler(){
             this.visible=false;
         },
-        toAddHandler(){
-            this.form={
-                type:"order"
-            }
-            this.title="录入订单信息";
+        //派单，并选择员工作为派单对象
+        toSendOrderHandler(row){
+            //模态框显示当前订单信息
+            this.form=row;
             this.visible=true;
+        },
+        //加载员工信息
+        loadEmployees(){
+            let url = "http://localhost:6677/waiter/findAll";
+                request.get(url).then(response=>{
+                this.employees = response.data;
+            })
         }
     },
     data(){
@@ -147,17 +135,18 @@ export default {
             title:"录入订单信息",
             visible:false,
             orders:{},
-            form:{
-                type:"order"
-            },
+            form:{},
             params:{
                 page:0,
                 pageSize:10
-            }
+            },
+            employees:[],
+            waiterId:null//选中的员工
         }
     },
     created(){
         this.loadData();
+        this.loadEmployees();
     }
 }
 </script>
