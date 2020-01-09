@@ -1,8 +1,12 @@
 <template>
     <div>
-    <!--按钮-->
-       <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
-       <el-button type="danger" size="small" >批量删除</el-button>
+    <!--选项卡-->
+        <el-tabs v-model="params.status" @tab-click="loadData" >
+            <el-tab-pane label="待派单" name="待派单"></el-tab-pane>
+            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+        </el-tabs>
         <!--/按钮结束-->
         <!--表格-->
        <el-table :data="orders.list">
@@ -15,18 +19,15 @@
            <el-table-column prop="addressId" label="地址ID" ></el-table-column>
            <el-table-column fixed="right" label="操作" >
                <template v-slot="slot">
-                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">
-                        <i class="el-icon-delete"/>
-                    </a>
-                    <a href="" @click.prevent="toUpdateHandler(slot.row)">
-                        <i class="el-icon-edit" />
-                    </a>
+                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">详情</a>
+                    <a href="" v-if="slot-row.status==='待派单'" @click.prevent="toSandOrderHandler(slot.row)">派单</a>
                </template>
            </el-table-column>
        </el-table>
         <!--/表格结束-->
         <!--分页开始-->
         <el-pagination 
+            hide-on-single-page
             layout="prev, pager, next" 
             :total="orders.total" 
             @current-change="pageChangeHandler">
@@ -74,6 +75,9 @@ export default {
         },
         loadData(){
             let url = "http://localhost:6677/order/queryPage"
+            if(this.params.status==="全部"){
+                delete this.params.status;
+            }
             request({
                 url,
                 method:"post",
