@@ -1,15 +1,5 @@
 <template>
     <div>
-<<<<<<< HEAD
-    <!--选项卡-->
-        <el-tabs v-model="params.status" @tab-click="loadData" >
-            <el-tab-pane label="待派单" name="待派单"></el-tab-pane>
-            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
-        </el-tabs>
-        <!--/按钮结束-->
-=======
         {{params}}
         <!-- 选项卡 -->
         <el-tabs v-model="params.status" @tab-click="loadData">
@@ -21,7 +11,6 @@
             <el-tab-pane label="已完成" name="已完成"></el-tab-pane>
         </el-tabs>
         <!-- /选项卡结束 -->
->>>>>>> 9029beb46ddd8c4b3623539fd0d6618b24311521
         <!--表格-->
        <el-table :data="orders.list">
            <el-table-column prop="id" label="编号" ></el-table-column>
@@ -31,30 +20,17 @@
            <el-table-column prop="customerId" label="顾客ID" ></el-table-column>
            <el-table-column prop="waiterId" label="员工ID" ></el-table-column>
            <el-table-column prop="addressId" label="地址ID" ></el-table-column>
-<<<<<<< HEAD
-           <el-table-column fixed="right" label="操作" >
-               <template v-slot="slot">
-                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">详情</a>
-                    <a href="" v-if="slot-row.status==='待派单'" @click.prevent="toSandOrderHandler(slot.row)">派单</a>
-               </template>
-           </el-table-column>
-=======
            <el-table-column fixed="right" label="操作">
                 <template v-slot="slot">
                     <a href="javascript:void(0)" >详情</a>
                     <a href="" v-if="slot.row.status === '待派单'" @click.prevent="toSendOrderHandler(slot.row)">派单</a>
                 </template>
             </el-table-column>
->>>>>>> 9029beb46ddd8c4b3623539fd0d6618b24311521
        </el-table>
         <!--/表格结束-->
         <!--分页开始-->
         <el-pagination 
-<<<<<<< HEAD
-            hide-on-single-page
-=======
             :hide-on-single-page="true"
->>>>>>> 9029beb46ddd8c4b3623539fd0d6618b24311521
             layout="prev, pager, next" 
             :total="orders.total" 
             @current-change="pageChangeHandler">
