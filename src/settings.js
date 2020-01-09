@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'LOL网络商城服务平台',
 
   /**
    * @type {boolean} true | false
