@@ -76,7 +76,7 @@ export default {
         },
         loadData(){
             let url = "http://localhost:6677/order/queryPage"
-            if(this.params.status === "全部"){
+            if(this.params.status==="全部"){
                 delete this.params.status;
             }
             request({

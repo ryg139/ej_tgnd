@@ -40,7 +40,7 @@
         width="60%">
         <el-form :model="form" label-width="80px">
 
-            --{{form}}
+            
             <el-form-item label="产品名称">
                 <el-input v-model="form.name"/>
             </el-form-item>
