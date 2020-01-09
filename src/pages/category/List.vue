@@ -24,7 +24,6 @@
       :title="title"
       :visible.sync="visible"
       width="60%">
-        ---{{form}}
       <el-form :model="form" label-width="80px">
         <el-form-item label="栏目名称">
           <el-input v-model="form.name"></el-input>
@@ -105,15 +104,18 @@ export default {
     },
     toUpdateHandler(row){
       //显示模态框当前信息
-      this.title="修改顾客信息";
+      this.title="修改栏目信息";
       this.form=row;
-      this.visible = true;//打开模态框
+      this.visible = true;
+      //打开模态框
     },
     closeModalHandler(){
       this.visible = false;
     },
     toAddHandler(){
+      this.title="录入栏目信息";
       this.visible = true;
+      this.form={}
     }
   },
   // 用于存放要向网页中显示的数据
