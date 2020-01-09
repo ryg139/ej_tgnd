@@ -27,7 +27,6 @@
         <!--/分页结束-->
          <!--模态框-->
         <el-dialog :title="title"  :visible.sync="visible"  width="60%">
-            测试：{{form}}
             <el-form :model="form" lable-width="80px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.username"></el-input>

@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{params}}
         <!-- 选项卡 -->
         <el-tabs v-model="params.status" @tab-click="loadData">
             <el-tab-pane label="全部" name="全部"></el-tab-pane>
@@ -77,7 +76,7 @@ export default {
         },
         loadData(){
             let url = "http://localhost:6677/order/queryPage"
-            if(this.params.status === "全部"){
+            if(this.params.status==="全部"){
                 delete this.params.status;
             }
             request({

@@ -121,6 +121,7 @@ export default {
   // 用于存放要向网页中显示的数据
   data(){
     return {
+      title:"",
       visible:false,
       categorys:[],
       form:{
